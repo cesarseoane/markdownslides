@@ -12,7 +12,7 @@ echo -e $ORIGIN
 function downloadLib() {
 
   LIB_FOLDER="../lib"
-  
+
   if [ -e $LIB_FOLDER ]; then
     if [ ! -d $LIB_FOLDER ]; then
       echo "ERROR: $LIB_FOLDER exists and is not a folder"
@@ -201,7 +201,7 @@ function buildDeckSlides() {
   downloadLib https://github.com/markahon/deck.search.js/archive/master.zip \
     deck.search.js-master deck.search.js
   downloadLib https://github.com/mikeharris100/deck.js-transition-cube/archive/master.zip \
-    deck.js-transition-cube-master deck.js-transition-cube 
+    deck.js-transition-cube-master deck.js-transition-cube
 
   echo -e "Exporting...                   ../export/$1-deck-slides$2.html DEPRECATED!!!"
 
@@ -254,9 +254,10 @@ function buildRevealSlidesPdf() {
 
   echo -e "Exporting...                   ../export/$1-reveal-slides$2.pdf"
 
+  phantomResolution=$(( RESOLUTION_WIDTH / 2 ))'x'$(( RESOLUTION_HEIGHT / 2 ))
   phantomjs --ssl-protocol=any ../lib/reveal.js/plugin/print-pdf/print-pdf.js \
     "file://`pwd`/../export/$1-reveal-slides$2.html?print-pdf" \
-    ../export/$1-reveal-slides$2.pdf $RESOLUTION_WIDTH'x'$RESOLUTION_HEIGHT > /dev/null
+    ../export/$1-reveal-slides$2.pdf $phantomResolution > /dev/null
 }
 
 function buildBeamerSlides() {
@@ -264,7 +265,7 @@ function buildBeamerSlides() {
   echo -e "Exporting...                   ../export/$1-beamer-slides.pdf DEPRECATED!!!"
 
   sed '/.gif/d' ../export/$1-to-slides.md | pandoc -w beamer \
-    --number-sections --table-of-contents --chapters -V fontsize=9pt -V theme=Warsaw -o ../export/$1-beamer-slides.pdf
+    --number-sections --table-of-contents --top-level-division=chapter -V fontsize=9pt -V theme=Warsaw -o ../export/$1-beamer-slides.pdf
 }
 
 function buildHtmlBook() {
@@ -279,28 +280,28 @@ function buildDocxBook() {
 
   echo -e "Exporting...                   ../export/$1-book.docx"
 
-  pandoc -w docx --number-sections --table-of-contents --chapters -o ../export/$1-book.docx ../export/$1-to-book.md
+  pandoc -w docx --number-sections --table-of-contents --top-level-division=chapter -o ../export/$1-book.docx ../export/$1-to-book.md
 }
 
 function buildOdtBook() {
 
   echo -e "Exporting...                   ../export/$1-book.odt"
 
-  pandoc -w odt --number-sections --table-of-contents --chapters -o ../export/$1-book.odt ../export/$1-to-book.md
+  pandoc -w odt --number-sections --table-of-contents --top-level-division=chapter -o ../export/$1-book.odt ../export/$1-to-book.md
 }
 
 function buildEpubBook() {
 
   echo -e "Exporting...                   ../export/$1-book.epub"
 
-  pandoc -w epub --number-sections --table-of-contents --chapters -o ../export/$1-book.epub ../export/$1-to-book.md
+  pandoc -w epub --number-sections --table-of-contents --top-level-division=chapter -o ../export/$1-book.epub ../export/$1-to-book.md
 }
 
 function buildPdfBook() {
 
   echo -e "Exporting...                   ../export/$1-book.pdf DEPRECATED!!!"
 
-  sed '/.gif/d' ../export/$1-to-book.md | pandoc --number-sections --table-of-contents --chapters -o ../export/$1-book.pdf
+  sed '/.gif/d' ../export/$1-to-book.md | pandoc --number-sections --table-of-contents --top-level-division=chapter -o ../export/$1-book.pdf
 }
 
 function build() {
